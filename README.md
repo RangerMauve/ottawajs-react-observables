@@ -103,6 +103,7 @@ src
 		 ├── Board.jsx
 		 ├── Cell.jsx
 		 ├── Game.jsx
+		 ├── Win.jsx
 		 └── Status.jsx
 ```
 
@@ -196,18 +197,21 @@ Note: Now, a lot of people have heard of Flux, Redux, Unidirectional data flow, 
 ### Represented using Observables
 
 ```javascript
-var fromClick = require("@most/dom-event").click;
-var most = require("most");
-
-var appClicks = fromClick(rootElement);
+var appClicks = most.fromEvent("click", rootElement);
 var cellClicks = appClicks.filter(isCell).map(getCell);
 
-var player = cellClicks.scan(changePlayer, "x");
-var cells = cellClicks.combine(addPlayer, player).reduce(addCell);
-var winner = cells.map(getWinner).filter(hasWinner);
-var state = most.startWith(defaultState).combineArray(makeState, [
-	player, cells, winner
-]);
+var playerClicks = cellClicks.scan(makePlayerClick, null);
+
+var cells = playerClicks.scan(addCell, defaultCells);
+var winner = cells.map(getWinner).filter(isTruthy);
+var player = playerClicks.map(getPlayer);
+
+var stateDependencies = [player, cells, winner];
+
+var initialState = most.startWith(defaultState);
+var combinedState = most.combineArray(makeState, stateDependencies)
+
+var state = initialState.merge(combinedState);
 ```
 
 Note: Here we can see some code for how we can set up Observable chains to calculate our state from user actions.

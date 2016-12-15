@@ -1,9 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
 import './index.css';
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+import Game from "./components/Game.js";
+import State from "./state.js";
+
+var rootElement = document.getElementById('root')
+
+var state = State(rootElement);
+
+state.forEach(function(currentState){
+	ReactDOM.render(
+	  <Game state={currentState}/>,
+		rootElement
+	);
+});

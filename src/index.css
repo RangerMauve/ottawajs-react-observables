@@ -3,3 +3,17 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.Board {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 120px;
+	height: 120px;
+}
+
+.Cell {
+	width: 33%;
+	height: 33%;
+}
